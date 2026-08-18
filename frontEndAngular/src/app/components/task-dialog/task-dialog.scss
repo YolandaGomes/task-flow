@@ -1,0 +1,142 @@
+h2[mat-dialog-title] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 20px;
+}
+
+// View-mode only: title centered, close button pinned to the top-right
+// corner instead of sharing the title's row.
+h2.view-title {
+  position: relative;
+  justify-content: center;
+  text-align: center;
+  padding-right: 40px;
+
+  .close-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: #2f6fed;
+  }
+}
+
+// View-mode only: labeled fields ("Descrição:", "Status:", ...) with
+// breathing room between each, mirroring the edit-mode form's field gap.
+mat-dialog-content.view-content {
+  padding-top: 4px;
+
+  p {
+    margin: 5px 5px 14px;
+
+    &:last-child {
+      margin-bottom: 6px;
+    }
+  }
+
+  strong {
+    font-weight: 600;
+  }
+}
+
+// Edit-mode only: the view-mode content renders <p> tags, the edit-mode
+// content renders a <form>, so scoping through "form" keeps every rule
+// below from touching the view-mode dialog.
+mat-dialog-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 4px;
+}
+
+mat-dialog-content form mat-form-field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 2px;
+
+  // Material's real floating label lives inside the outline's "notch" and
+  // is only reliably visible in the exact spot Material's own JS puts it.
+  // Rather than fight that, it's hidden below and replaced with a plain
+  // label of our own, rendered above the field via ::before.
+  &::before {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.75);
+  }
+
+  &:has(input[formcontrolname='title'])::before {
+    content: 'Título';
+  }
+
+  &:has(textarea)::before {
+    content: 'Descrição';
+  }
+
+  &:has(mat-select)::before {
+    content: 'Status';
+  }
+
+  ::ng-deep {
+    // This form field defaults to Material's "fill" appearance (no
+    // appearance attribute is set in the template), so it's shaped by
+    // .mdc-line-ripple (the bottom underline) and .mdc-text-field--filled's
+    // own background/radius — not by a notched outline.
+    .mat-mdc-form-field-flex {
+      align-items: center;
+      background-color: var(--mat-sys-surface-container-highest, #e9e9f2) !important;
+      border-radius: 10px !important;
+      padding: 0 14px;
+    }
+
+    .mdc-line-ripple {
+      display: none;
+    }
+
+    .mdc-floating-label {
+      opacity: 0 !important;
+    }
+
+    textarea {
+      min-height: 80px;
+    }
+
+    .mat-mdc-form-field-subscript-wrapper {
+      padding: 10px;
+    }
+  }
+}
+
+// Shared pill-button pattern for both dialog modes: an outlined button
+// (Cancelar / Excluir) paired with a filled blue button (Salvar / Editar).
+mat-dialog-actions:has(.btn-outline) {
+  justify-content: center !important;
+  gap: 8px;
+  padding: 4px 0 8px;
+}
+
+.btn-outline,
+.btn-filled {
+  flex: none;
+  border-radius: 999px;
+}
+
+.btn-outline {
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  color: rgba(0, 0, 0, 0.75);
+  padding: 0 24px;
+}
+
+.btn-filled {
+  --mdc-text-button-label-text-color: #ffffff;
+  background-color: #2f6fed;
+  color: #ffffff;
+  padding: 0 28px;
+
+  // MatButton renders its own label span internally with a color that
+  // reads the CSS variable above, but resolves it against the button's
+  // default (unthemed) primary color first — beat it explicitly.
+  ::ng-deep .mdc-button__label {
+    color: #ffffff !important;
+  }
+}

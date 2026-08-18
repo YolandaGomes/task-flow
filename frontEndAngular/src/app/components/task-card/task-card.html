@@ -1,0 +1,33 @@
+<mat-card
+  class="task-card"
+  (click)="openTaskDialog()">
+  <mat-card-header>
+    <mat-card-title>
+      {{ task().title }}
+    </mat-card-title>
+  </mat-card-header>
+
+<mat-card-actions align="end">
+
+  @if (task().status !== 'TODO') {
+    <button class="moveBackward"
+      mat-icon-button
+      aria-label="Voltar tarefa"
+      (click)="moveBackward($event)">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  }
+
+  @if (task().status !== 'DONE') {
+    <button class="moveForward"
+      mat-icon-button
+      aria-label="Avançar tarefa"
+      (click)="moveForward($event)">
+      <mat-icon>arrow_forward</mat-icon>
+    </button>
+  }
+
+</mat-card-actions>
+
+</mat-card>
+

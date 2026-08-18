@@ -1,0 +1,114 @@
+.new-task {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px 24px 40px;
+}
+
+h1 {
+  margin: 0 -24px 24px;
+  padding: 4px 24px 20px;
+  font-size: 21px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+// mat-form-field/textarea/mat-select are written directly in this page's
+// own template, so they carry this component's style scope and can be
+// targeted normally. Everything Material generates *inside* them (the
+// notched outline, the floating label) belongs to MatFormField's own
+// scope and needs ::ng-deep to reach.
+$label-column: 92px;
+
+.new-task mat-form-field {
+  display: block;
+  position: relative;
+  margin-left: $label-column;
+
+  // Material's real floating label lives inside the outline's "notch",
+  // which is clipped/sized by JS for the notch-in-the-border animation.
+  // Forcing the label out to a left-hand column via CSS fights that
+  // clipping and makes it invisible, so it's hidden here and replaced
+  // with a plain, reliably-positioned label of our own below.
+  &::before {
+    position: absolute;
+    left: -$label-column;
+    width: $label-column - 16px;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.75);
+    white-space: normal;
+    line-height: 1.3;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &:has(input[formcontrolname='title'])::before {
+    content: 'Título';
+  }
+
+  &:has(textarea)::before {
+    content: 'Descrição';
+    top: 18px;
+    transform: none;
+  }
+
+  &:has(mat-select)::before {
+    content: 'Status';
+  }
+}
+
+::ng-deep .new-task mat-form-field {
+  .mat-mdc-form-field-flex {
+    align-items: center;
+    background-color: var(--mat-sys-surface-container-highest, #e9e9f2);
+    border-radius: 10px;
+    padding: 0 14px;
+  }
+
+  .mdc-notched-outline,
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: transparent !important;
+  }
+
+  .mdc-floating-label {
+    opacity: 0 !important;
+  }
+
+  textarea {
+    min-height: 90px;
+  }
+
+  .mat-mdc-form-field-subscript-wrapper {
+    padding: 0 14px;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.actions button[mat-button] {
+  --mdc-text-button-container-shape: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  padding: 0 24px;
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.actions button[mat-flat-button] {
+  --mdc-filled-button-container-shape: 999px;
+  --mdc-filled-button-container-color: #2f6fed;
+  --mdc-filled-button-label-text-color: #ffffff;
+  padding: 0 28px;
+}
+

@@ -1,0 +1,32 @@
+<section class="task-column">
+
+    <div class="column-header" [class]="getHeaderClass()">
+      <h2>{{ getColumnTitle() }}</h2>
+    </div>
+
+<div
+  class="tasks"
+  cdkDropList
+  [id]="dropListId()"
+  [cdkDropListData]="filteredTasks()"
+  [cdkDropListConnectedTo]="['todo', 'inProgress', 'done']"
+  (cdkDropListDropped)="drop($event)"
+>
+
+  @for (task of filteredTasks(); track task.id) {
+
+    <div cdkDrag>
+
+      <app-task-card
+        [task]="task"
+        (taskUpdated)="taskUpdated.emit($event)"
+        (taskMoved)="taskMoved.emit($event)">
+      </app-task-card>
+
+    </div>
+
+  }
+
+</div>
+
+</section>

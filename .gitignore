@@ -1,0 +1,28 @@
+# Angular
+frontEndAngular/node_modules/
+frontEndAngular/dist/
+frontEndAngular/.angular/
+
+# Go
+backEndGo/bin/
+backEndGo/tmp/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+
+# Claude Code
+.claude/
+
+# AI development configuration
+**/.mcp.json
+**/AGENTS.md
+
+# Operating System
+.DS_Store
+Thumbs.db

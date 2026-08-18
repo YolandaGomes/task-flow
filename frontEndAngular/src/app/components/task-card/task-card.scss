@@ -1,0 +1,121 @@
+.task-card {
+  position: relative;
+  cursor: grab;
+
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+
+  background-color: #EDE1F2;
+
+  // Reserves room at the bottom so the absolutely positioned arrows
+  // (.moveBackward/.moveForward) never overlap the title/description.
+  padding-bottom: 40px;
+}
+
+.task-card:active {
+  cursor: grabbing;
+}
+
+// cdkDrag wraps <app-task-card> in task-column.html, cloning it both for
+// the floating preview (appended to <body>, outside this component's view
+// encapsulation — hence ::ng-deep) and for the in-list placeholder.
+::ng-deep .cdk-drag-preview .task-card {
+  cursor: grabbing;
+  // A stronger, more "lifted" shadow than the resting card, so the
+  // dragged card visually pops above the board while it's held.
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25), 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+// The placeholder marks where the card will land if dropped — shown as an
+// empty dashed slot instead of a confusing duplicate of the card itself.
+::ng-deep .cdk-drag-placeholder .task-card {
+  background-color: rgba(47, 111, 237, 0.08);
+  border: 2px dashed rgba(47, 111, 237, 0.45);
+  box-shadow: none;
+
+  * {
+    visibility: hidden;
+  }
+}
+
+mat-card-header {
+  justify-content: center;
+}
+
+mat-card-title {
+  width: 100%;
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1D1B20;
+  text-align: center;
+}
+
+mat-card-content {
+  text-align: center;
+}
+
+mat-card-content p {
+  margin: 4px 0 0;
+
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+  color: #49454F;
+  text-align: center;
+}
+
+// The actions row only exists to host the arrow buttons, which are pulled
+// out of flow (position: absolute) and pinned to the card's own corners —
+// so the row itself is collapsed to avoid adding extra empty space.
+mat-card-actions {
+  display: block;
+  padding: 0;
+  min-height: 0;
+}
+
+.moveBackward,
+.moveForward {
+  position: absolute;
+  bottom: 6px;
+}
+
+.moveBackward {
+  left: 6px;
+}
+
+.moveForward {
+  right: 6px;
+}
+
+@media (max-width: 600px) {
+  .task-card {
+    padding-bottom: 32px;
+  }
+
+  mat-card-header,
+  mat-card-content {
+    padding: 12px;
+  }
+
+  mat-card-title {
+    font-size: 12px;
+  }
+
+  mat-card-content p {
+    font-size: 10px;
+  }
+
+  .moveBackward,
+  .moveForward {
+    bottom: 2px;
+  }
+
+  .moveBackward {
+    left: 2px;
+  }
+
+  .moveForward {
+    right: 2px;
+  }
+}

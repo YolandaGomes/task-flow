@@ -1,0 +1,30 @@
+header {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 0 clamp(12px, 4vw, 16px);
+  background-color: #2F6FED;
+  color:#FFFFFF;
+  gap: clamp(8px, 2vw, 10px);
+  font-family: 'Roboto', sans-serif;
+  // Floor of 56px matches the board's "Nova tarefa" bar height so the
+  // header never renders shorter than the content directly beneath it.
+  min-height: clamp(56px, 10vw, 64px);
+}
+
+header h1 {
+  margin: 0;
+  font-size: clamp(18px, 4vw, 24px);
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+header img {
+  flex-shrink: 0;
+  width: clamp(24px, 6vw, 32px);
+  height: clamp(24px, 6vw, 32px);
+  filter: brightness(0) invert(1);
+}

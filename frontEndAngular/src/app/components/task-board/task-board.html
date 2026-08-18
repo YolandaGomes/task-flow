@@ -1,0 +1,36 @@
+
+<div class="task-board">
+  
+  <button
+  mat-flat-button
+  class="new-task-button"
+  (click)="newTask()">
+
+  <mat-icon>add</mat-icon>
+
+  Nova Tarefa
+
+</button>
+  
+  <app-task-column
+    status="TODO"
+    dropListId="todo"
+    [tasks]="tasks()"
+    (taskMoved)="moveTask($event)">
+  </app-task-column>
+
+  <app-task-column
+    status="IN_PROGRESS"
+    dropListId="inProgress"
+    [tasks]="tasks()"
+    (taskMoved)="moveTask($event)">
+  </app-task-column>
+
+  <app-task-column
+    status="DONE"
+    dropListId="done"
+    [tasks]="tasks()"
+    (taskMoved)="moveTask($event)">
+  </app-task-column>
+
+</div>

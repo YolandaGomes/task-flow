@@ -1,0 +1,137 @@
+@if (!editMode) {
+
+      <!-- MODO VISUALIZACAO -->
+
+<h2 mat-dialog-title class="view-title">
+  {{ data.title }}
+
+  <button
+    mat-icon-button
+    mat-dialog-close
+    aria-label="Fechar"
+    class="close-btn">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+
+<mat-dialog-content class="view-content">
+
+  <p>
+    <strong>Descrição:</strong> {{ data.description }}
+  </p>
+
+  <p>
+    <strong>Status:</strong> {{ getStatusLabel() }}
+  </p>
+
+  <p>
+    <strong>Criada em:</strong> {{ data.created_at | date: "dd/MM/yyyy 'às' HH:mm" }}
+  </p>
+
+  <p>
+    <strong>Atualizada em:</strong> {{ data.updated_at | date: "dd/MM/yyyy 'às' HH:mm" }}
+  </p>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+
+   <button
+      mat-button
+      class="btn-outline"
+      (click)="deleteTask()">
+      Excluir
+  </button>
+
+  <button
+      mat-button
+      class="btn-filled"
+      (click)="startEditing()">
+      Editar
+   </button>
+
+</mat-dialog-actions>
+
+} @else {
+
+  <!-- MODO EDIÇÃO -->
+
+  <h2 mat-dialog-title>
+
+    Editar tarefa
+
+    <button
+      mat-icon-button
+      mat-dialog-close
+      aria-label="Fechar">
+      <mat-icon>close</mat-icon>
+    </button>
+
+  </h2>
+
+  <mat-dialog-content>
+
+    <form [formGroup]="taskForm">
+
+      <mat-form-field>
+        <mat-label>Título</mat-label>
+
+        <input
+          matInput
+          formControlName="title"/>
+      </mat-form-field>
+
+
+      <mat-form-field>
+        <mat-label>Descrição</mat-label>
+
+        <textarea
+          matInput
+          formControlName="description">
+        </textarea>
+      </mat-form-field>
+
+
+      <mat-form-field>
+        <mat-label>Status</mat-label>
+
+        <mat-select formControlName="status">
+
+          <mat-option value="TODO">
+            A fazer
+          </mat-option>
+
+          <mat-option value="IN_PROGRESS">
+            Em progresso
+          </mat-option>
+
+          <mat-option value="DONE">
+            Concluído
+          </mat-option>
+
+        </mat-select>
+
+      </mat-form-field>
+
+    </form>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+
+    <button
+      mat-button
+      class="btn-outline"
+      (click)="cancelEditing()">
+      Cancelar
+    </button>
+
+    <button
+        mat-button
+        class="btn-filled"
+        (click)="saveTask()">
+        Salvar
+    </button>
+
+  </mat-dialog-actions>
+}

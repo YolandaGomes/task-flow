@@ -1,0 +1,78 @@
+<div class="new-task">
+
+  <h1>Nova tarefa</h1>
+
+  <form
+    [formGroup]="taskForm"
+    (ngSubmit)="createTask()">
+
+    <mat-form-field appearance="outline">
+      <mat-label>Título</mat-label>
+
+      <input
+        matInput
+        formControlName="title"
+        placeholder="Digite o título da tarefa">
+
+      @if (taskForm.controls.title.hasError('required')) {
+        <mat-error>
+          O título é obrigatório.
+        </mat-error>
+      }
+
+    </mat-form-field>
+
+
+    <mat-form-field appearance="outline">
+      <mat-label>Descrição</mat-label>
+
+      <textarea
+        matInput
+        formControlName="description"
+        placeholder="Digite uma descrição">
+      </textarea>
+
+    </mat-form-field>
+
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+
+      <mat-select formControlName="status">
+
+        <mat-option value="TODO">
+          A fazer
+        </mat-option>
+
+        <mat-option value="IN_PROGRESS">
+          Em progresso
+        </mat-option>
+
+        <mat-option value="DONE">
+          Concluído
+        </mat-option>
+
+      </mat-select>
+
+    </mat-form-field>
+
+
+    <div class="actions">
+
+      <button
+        mat-button
+        type="button" (click)="cancel()">
+        Cancelar
+      </button>
+
+      <button
+        mat-flat-button
+        type="submit">
+        Criar tarefa
+      </button>
+
+    </div>
+
+  </form>
+
+</div>
