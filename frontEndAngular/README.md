@@ -166,8 +166,8 @@ arrastado (`.cdk-drag-preview`), um slot tracejado vazio indicando onde ele vai 
 
 ### O que falta
 
-- `TaskBoard.moveTask()` não dá feedback visível ao usuário em caso de erro (só
-  `console.error`) — diferente de criar/editar/excluir, que já usam `MatSnackBar`
+- Excluir tarefa não pede confirmação — o clique em "Excluir" no `TaskDialog` já
+  dispara `TaskService.deleteTask()` direto, sem um passo intermediário de confirmação
 - `environment` com a URL base da API — hoje `TaskService` tem `http://localhost:8000/tasks` fixo no código
 
 
@@ -204,7 +204,7 @@ ng test
 - [x] Atualizar o `TaskBoard` após editar/excluir uma tarefa
 - [x] Mover tarefa entre colunas: setas no `TaskCard` e drag-and-drop com Angular CDK
 - [x] Feedback visual (`MatSnackBar`) ao criar/editar/excluir tarefa
-- [ ] Feedback visual (`MatSnackBar`) ao mover tarefa
+- [ ] Confirmação antes de excluir tarefa (hoje "Excluir" já executa direto)
 - [ ] `environment` com a URL base da API
 - [ ] Testes com dados mockados de `TaskService`
 
@@ -212,6 +212,6 @@ ng test
 
 ## Contexto de aprendizado
 
-Primeiro contato do autor com Angular standalone components, signals e Angular Material.
+Primeiro contato da autora com Angular standalone components, signals e Angular Material.
 Ver também o [README raiz](../README.md) para a visão geral do projeto, e o
 [README do backend](../backEndGo/README.md) para o contexto da API em Go.
