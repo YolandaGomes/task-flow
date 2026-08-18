@@ -185,6 +185,6 @@ curl http://localhost:8000/ping
 
 ## Contexto de aprendizado
 
-Este projeto é o primeiro contato do autor com Go. A arquitetura em camadas,
+Este projeto é o primeiro contato da autora com Go. A arquitetura em camadas,
 os construtores `NewXxx`, o uso do `database/sql` com `lib/pq` e o roteamento
 com Gin foram todos aprendidos e aplicados aqui pela primeira vez.

@@ -4,7 +4,7 @@ Sistema de controle de tarefas em formato Kanban, full-stack: API REST em
 **Go** (arquitetura em camadas + PostgreSQL, containerizada com Docker) e interface em
 **Angular** (standalone components, signals, Angular Material) consumindo essa API.
 
-Projeto de estudo construído do zero — primeiro contato do autor tanto com Go quanto
+Projeto de estudo construído do zero — primeiro contato da autora tanto com Go quanto
 com Angular — usado aqui como portfólio técnico. As decisões de arquitetura e as
 convenções de código priorizam aprender cada stack na prática, não necessariamente a
 forma mais enxuta de resolver o problema.
@@ -106,13 +106,13 @@ Destaques atuais:
 - [ ] Validações de entrada na API (ex: `title` obrigatório)
 - [ ] Testes automatizados (backend: service/repository; frontend: `TaskService` com dados mockados)
 - [ ] `environment` do Angular com a URL base da API (hoje fixa em `TaskService`)
-- [ ] Feedback visual (snackbar) ao mover uma tarefa
+- [ ] Confirmação antes de excluir uma tarefa
 
 ---
 
 ## Contexto de aprendizado
 
-Este é o primeiro projeto full-stack do autor construído do zero em ambas as pontas:
+Este é o primeiro projeto full-stack da autora construído do zero em ambas as pontas:
 a API em Go (arquitetura em camadas, `database/sql` com `lib/pq`, roteamento com Gin)
 e a interface em Angular (standalone components, signals, Angular Material e CDK).
 Os READMEs de cada subprojeto documentam decisões técnicas específicas tomadas ao
