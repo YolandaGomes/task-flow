@@ -20,6 +20,7 @@
       <app-task-card
         [task]="task"
         (taskUpdated)="taskUpdated.emit($event)"
+        (taskDeleted)="taskDeleted.emit($event)"
         (taskMoved)="taskMoved.emit($event)">
       </app-task-card>
 

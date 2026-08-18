@@ -1,185 +1,120 @@
-# Sistema de Controle de Tarefas (Task Manager)
+# Task Manager
 
-Projeto de estudo para aprender a linguagem Go, construindo uma API REST completa
-seguindo o padrão de arquitetura em camadas (**Controller → Service → Repository**).
-O projeto foi baseado em um tutorial do YouTube que constrói uma API de estoque de
-produtos, adaptado aqui para um sistema de gerenciamento de tarefas.
+Sistema de controle de tarefas em formato Kanban, full-stack: API REST em
+**Go** (arquitetura em camadas + PostgreSQL, containerizada com Docker) e interface em
+**Angular** (standalone components, signals, Angular Material) consumindo essa API.
 
-O repositório está dividido em duas partes:
+Projeto de estudo construído do zero — primeiro contato do autor tanto com Go quanto
+com Angular — usado aqui como portfólio técnico. As decisões de arquitetura e as
+convenções de código priorizam aprender cada stack na prática, não necessariamente a
+forma mais enxuta de resolver o problema.
 
-- `backEndGo/` — API REST em Go (em desenvolvimento, funcional)
-- `frontEndAngular/` — interface em Angular (em desenvolvimento, já consumindo a API — ver [README do frontend](./frontEndAngular/README.md))
-
-Este README documenta o que já foi construído no backend.
+![Board Kanban do Task Manager](./docs/board-screenshot.png)
 
 ---
 
-## Stack utilizada
+## Funcionalidades
 
-| Camada | Tecnologia |
+- **Board Kanban** com 3 colunas (A fazer / Em progresso / Concluído), cada uma
+  buscando as tarefas reais da API
+- **CRUD completo de tarefas**: criar (formulário dedicado), visualizar, editar e
+  excluir (diálogo modal), tudo persistido no backend
+- **Mover tarefas entre colunas** de duas formas: botões de seta no card ou
+  **drag-and-drop** (Angular CDK), com feedback visual durante o arraste (sombra no
+  card, slot tracejado indicando onde ele vai cair, destaque na coluna de destino)
+- **Feedback ao usuário** via snackbar para criar, editar e excluir tarefas
+- **Layout responsivo**, do desktop a telas estreitas de celular
+
+---
+
+## Arquitetura geral
+
+```
+Angular (localhost:4200)  ──HTTP/JSON──▶  API Go / Gin (localhost:8000)  ──SQL──▶  PostgreSQL (localhost:5432)
+     TaskService                          Controller → Service → Repository
+                                                 (Docker Compose)
+```
+
+O frontend fala com a API só através de `TaskService` (`HttpClient`); a API segue o
+padrão em camadas Controller → Service → Repository, isolando o acesso ao banco numa
+única camada. Backend e banco rodam em containers Docker; o frontend roda localmente
+via `ng serve` durante o desenvolvimento.
+
+---
+
+## Stack
+
+| | Tecnologias |
 |---|---|
-| Linguagem | [Go](https://go.dev/) 1.25 |
-| Framework HTTP | [Gin](https://gin-gonic.com/) |
-| CORS | [gin-contrib/cors](https://github.com/gin-contrib/cors) |
-| Banco de dados | PostgreSQL 17 |
-| Driver do banco | [lib/pq](https://github.com/lib/pq) |
-| Containerização | Docker + Docker Compose |
+| **Backend** | Go 1.25 · Gin · lib/pq · PostgreSQL 17 · Docker / Docker Compose |
+| **Frontend** | Angular 22 (standalone components, signals) · Angular Material + CDK (Dialog, Snack Bar, Drag & Drop) · Reactive Forms · SCSS · Vitest |
 
 ---
 
-## Arquitetura
-
-O projeto segue uma separação clássica em camadas, onde cada uma tem uma única
-responsabilidade e só conhece a camada logo abaixo dela:
+## Estrutura do repositório
 
 ```
-cmd/            → ponto de entrada da aplicação (main.go)
-controller/     → recebe a requisição HTTP, valida entrada e devolve a resposta
-service/        → regra de negócio (hoje é uma camada fina, repassa para o repository)
-repository/     → única camada que conversa com o banco de dados (SQL puro)
-model/          → structs que representam os dados (Task, Response)
-db/             → abre e mantém a conexão com o PostgreSQL
+projetoCRUD/
+├── backEndGo/          → API REST em Go — ver [README do backend](./backEndGo/README.md)
+└── frontEndAngular/     → interface Angular (Kanban) — ver [README do frontend](./frontEndAngular/README.md)
 ```
 
-### Fluxo de uma requisição
+Cada subprojeto tem seu próprio README com a arquitetura, decisões técnicas e roadmap
+detalhados:
 
-Usando o `POST /tasks` como exemplo:
-
-1. **`cmd/main.go`** registra a rota e a associa ao método `CreateTask` do controller.
-2. **`controller/taskController.go`** lê o JSON do corpo da requisição (`ctx.BindJSON`)
-   e o transforma em uma struct `model.Task`.
-3. O controller chama `taskService.CreateTask(task)` — ele não sabe *como* a tarefa
-   é salva, só delega.
-4. **`service/taskService.go`** aplica a regra de negócio (hoje, apenas repassa a
-   chamada) e delega para o repository.
-5. **`repository/taskRepository.go`** monta e executa o `INSERT` SQL, usando
-   `sql.DB` para falar com o Postgres, e retorna o `id` gerado.
-6. O controller recebe a tarefa criada e responde ao cliente com `201 Created`.
-
-Essa é a ideia central do padrão: cada camada só depende da camada abaixo dela
-(o `controller` depende do `service`, que depende do `repository`), o que facilita
-testar e trocar peças isoladamente no futuro.
-
-### Injeção de dependência manual (em `main.go`)
-
-```go
-dbConnection, _ := db.ConnectDB()
-TaskRepository := repository.NewTaskRepository(dbConnection)
-TaskService := service.NewTaskService(TaskRepository)
-TaskController := controller.NewTaskController(TaskService)
-```
-
-Cada camada superior recebe, no seu construtor (`NewXxx`), uma instância da camada
-inferior. É assim que o `controller` tem acesso ao `service` sem precisar saber
-como ele foi montado.
-
-### CORS
-
-Ao ligar o frontend Angular (`http://localhost:4200`) na API (`http://localhost:8000`),
-as requisições do `TaskService` (via `HttpClient`) eram bloqueadas pelo navegador com
-erro de CORS — origens e portas diferentes contam como cross-origin, e a API não
-enviava os headers `Access-Control-Allow-*` exigidos.
-
-A correção foi registrar o middleware `cors.New` do `gin-contrib/cors` **antes** de
-qualquer rota, em `cmd/main.go`:
-
-```go
-server.Use(cors.New(cors.Config{
-    AllowOrigins: []string{"http://localhost:4200"},
-    AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-    AllowHeaders: []string{"Origin", "Content-Type", "Accept"},
-}))
-```
-
-> ⚠️ `AllowOrigins` está fixo em `http://localhost:4200` (origem do `ng serve`). Se a
-> porta do frontend mudar ou a API for exposta em outro host, esse valor precisa ser
-> atualizado (ou trocado por uma variável de ambiente).
+- **[backEndGo/README.md](./backEndGo/README.md)** — camadas Controller/Service/Repository,
+  fluxo de uma requisição, modelo de dados, endpoints, CORS
+- **[frontEndAngular/README.md](./frontEndAngular/README.md)** — árvore de componentes,
+  fluxo de dados do Kanban (criar/editar/excluir/mover), estrutura do projeto
 
 ---
 
-## Modelo de dados
+## Como rodar o projeto completo
 
-`model/task.go`:
+**1. Backend + banco de dados** (Docker e Docker Compose instalados, Docker Desktop
+aberto; crie um `.env` em `backEndGo/` a partir de `.env.exemple`):
 
-```go
-type Task struct {
-    ID          int
-    Title       string
-    Description string
-    Status      string
-    CreatedAt   time.Time
-    UpdatedAt   time.Time
-}
-```
-
-> ⚠️ O projeto ainda não tem um script de migração/criação de tabela. Antes de
-> rodar pela primeira vez, crie a tabela manualmente no Postgres:
->
-> ```sql
-> CREATE TABLE tasks (
-    id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
-    status VARCHAR(20) NOT NULL DEFAULT 'TODO',
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
-   );
-> ```
-
----
-
-## Endpoints disponíveis
-
-| Método | Rota | Descrição |
-|---|---|---|
-| GET | `/ping` | healthcheck simples ("pong") |
-| GET | `/tasks` | lista todas as tarefas |
-| POST | `/tasks` | cria uma nova tarefa |
-| GET | `/tasks/:taskId` | busca uma tarefa por id |
-| PUT | `/tasks/:taskId` | atualiza uma tarefa existente |
-| DELETE | `/tasks/:taskId` | remove uma tarefa |
-
-Todas as rotas de erro retornam um `model.Response{ Message: string }` explicando
-o problema (id nulo, id inválido, tarefa não encontrada, etc).
-
----
-
-## Como rodar o projeto
-
-Pré-requisitos: Docker e Docker Compose instalados.
-é necessário abrir o Docker desktop antes
 ```bash
 cd backEndGo
 docker compose up --build -d
 ```
 
-Isso sobe dois containers:
-
-- `taskmanager-db` — Postgres 17, exposto na porta `5432`
-- `taskmanager-api` — a API Go, exposta na porta `8000`
-
-Teste com:
+Confirma que a API subiu:
 
 ```bash
 curl http://localhost:8000/ping
 ```
 
+**2. Frontend:**
+
+```bash
+cd frontEndAngular
+npm install
+ng serve
+```
+
+Abre em `http://localhost:4200/`.
+
 ---
 
-## Próximos passos (roadmap)
+## Roadmap
 
-- [ ] Automatizar a criação da tabela `tasks` (script de init do Postgres ou lib de migration)
-- [ ] Adicionar validações de entrada (ex: `title` obrigatório)
-- [ ] Extrair interfaces para `TaskRepository` e `TaskService`, permitindo mocks em testes
-- [ ] Escrever testes unitários para service e repository
-- [ ] Variáveis de ambiente para credenciais do banco (hoje estão fixas em `db/conn.go`)
-- [ ] `AllowOrigins` do CORS hoje está fixo em `http://localhost:4200`; tornar configurável por variável de ambiente
-- [x] Iniciar o frontend em Angular (`frontEndAngular/`)
+Os itens pendentes de cada camada estão detalhados nos READMEs de cada subprojeto.
+Destaques atuais:
+
+- [ ] Automatizar a criação da tabela `tasks` no Postgres (script de init/migration)
+- [ ] Validações de entrada na API (ex: `title` obrigatório)
+- [ ] Testes automatizados (backend: service/repository; frontend: `TaskService` com dados mockados)
+- [ ] `environment` do Angular com a URL base da API (hoje fixa em `TaskService`)
+- [ ] Feedback visual (snackbar) ao mover uma tarefa
 
 ---
 
 ## Contexto de aprendizado
 
-Este projeto é o primeiro contato do autor com Go. A arquitetura em camadas,
-os construtores `NewXxx`, o uso do `database/sql` com `lib/pq` e o roteamento
-com Gin foram todos aprendidos e aplicados aqui pela primeira vez.
+Este é o primeiro projeto full-stack do autor construído do zero em ambas as pontas:
+a API em Go (arquitetura em camadas, `database/sql` com `lib/pq`, roteamento com Gin)
+e a interface em Angular (standalone components, signals, Angular Material e CDK).
+Os READMEs de cada subprojeto documentam decisões técnicas específicas tomadas ao
+longo do caminho — como a configuração de CORS entre frontend e backend, ou o fluxo de
+sincronização do board Kanban com a API.

@@ -16,6 +16,8 @@
     status="TODO"
     dropListId="todo"
     [tasks]="tasks()"
+    (taskUpdated)="updateTask($event)"
+    (taskDeleted)="deleteTask($event)"
     (taskMoved)="moveTask($event)">
   </app-task-column>
 
@@ -23,6 +25,8 @@
     status="IN_PROGRESS"
     dropListId="inProgress"
     [tasks]="tasks()"
+    (taskUpdated)="updateTask($event)"
+    (taskDeleted)="deleteTask($event)"
     (taskMoved)="moveTask($event)">
   </app-task-column>
 
@@ -30,6 +34,8 @@
     status="DONE"
     dropListId="done"
     [tasks]="tasks()"
+    (taskUpdated)="updateTask($event)"
+    (taskDeleted)="deleteTask($event)"
     (taskMoved)="moveTask($event)">
   </app-task-column>
 

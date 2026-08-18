@@ -213,4 +213,5 @@ ng test
 ## Contexto de aprendizado
 
 Primeiro contato do autor com Angular standalone components, signals e Angular Material.
-Ver também o [README raiz](../README.md) para o contexto do backend em Go.
+Ver também o [README raiz](../README.md) para a visão geral do projeto, e o
+[README do backend](../backEndGo/README.md) para o contexto da API em Go.
