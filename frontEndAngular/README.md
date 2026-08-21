@@ -1,5 +1,11 @@
 # FrontEndAngular — Task Manager
 
+[![Angular](https://img.shields.io/badge/Angular-22-DD0031?style=flat&logo=angular&logoColor=white)](https://angular.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Angular Material](https://img.shields.io/badge/Angular%20Material-757575?style=flat&logo=angular&logoColor=white)](https://material.angular.dev/)
+[![SCSS](https://img.shields.io/badge/SCSS-CC6699?style=flat&logo=sass&logoColor=white)](https://sass-lang.com/)
+[![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=flat&logo=vitest&logoColor=white)](https://vitest.dev/)
+
 Interface em Angular para o [Sistema de Controle de Tarefas](../README.md) (API em Go,
 `backEndGo/`). Gerado com Angular CLI 22.1.3.
 

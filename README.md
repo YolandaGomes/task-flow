@@ -1,5 +1,14 @@
 # Task Manager
 
+[![Go](https://img.shields.io/badge/Go-1.25-00ADD8?style=flat&logo=go&logoColor=white)](https://go.dev/)
+[![Gin](https://img.shields.io/badge/Gin-Web%20Framework-008ECF?style=flat)](https://gin-gonic.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-4169E1?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Angular](https://img.shields.io/badge/Angular-22-DD0031?style=flat&logo=angular&logoColor=white)](https://angular.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Angular Material](https://img.shields.io/badge/Angular%20Material-757575?style=flat&logo=angular&logoColor=white)](https://material.angular.dev/)
+[![SCSS](https://img.shields.io/badge/SCSS-CC6699?style=flat&logo=sass&logoColor=white)](https://sass-lang.com/)
+
 Sistema de controle de tarefas em formato Kanban, full-stack: API REST em
 **Go** (arquitetura em camadas + PostgreSQL, containerizada com Docker) e interface em
 **Angular** (standalone components, signals, Angular Material) consumindo essa API.

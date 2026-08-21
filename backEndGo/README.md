@@ -1,5 +1,10 @@
 # BackEndGo — Task Manager API
 
+[![Go](https://img.shields.io/badge/Go-1.25-00ADD8?style=flat&logo=go&logoColor=white)](https://go.dev/)
+[![Gin](https://img.shields.io/badge/Gin-Web%20Framework-008ECF?style=flat)](https://gin-gonic.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-4169E1?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
+
 API REST em Go para o [Sistema de Controle de Tarefas](../README.md) (interface em
 Angular, `frontEndAngular/`). Projeto de estudo para aprender a linguagem construindo
 uma API completa seguindo o padrão de arquitetura em camadas
